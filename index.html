@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visual Novel</title>
+  </head>
+  <body style="overflow: hidden;">
+    <div id="main-menu" class="main-menu">
+      <div id="main-menu-sidebar" class="menu-sidebar">
+        <div id="new-game-button" class="menu-button">New Game</div>
+        <div id="continue-button" class="menu-button">Continue</div>
+      </div>
+      <img id="main-menu-logo" class="menu-logo"></img>
+    </div>
+    <div id="app" style="display: none;">
+      <div id="background-panel" class="game-background-panel" >
+        <img id="background-panel-img" class="game-background-panel-img"></img>
+        <img id="background-panel-img-transition" class="game-background-panel-img" style="opacity: 0;"></img>
+      </div>
+      <div id="portrait-panel" class="game-portrait-panel">
+        <!-- character portraits -->
+      </div>
+      <div id="speaker-box" class="game-speaker-box">
+        <div id="line-attribution"></div>
+      </div>
+      <div id="prompt-panel" class="game-prompt-panel">
+        <div id="prompt-list"></div>
+      </div>
+      <div id="dialogue-panel" class="game-dialogue-panel">
+        <div id="line-text" class="game-line-text"></div>
+      </div>
+    </div>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
