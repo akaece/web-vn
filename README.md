@@ -23,6 +23,28 @@ A JS toolkit for developing VNs that are playable in the browser.
  * TBD: Documentation for each config option.
     * Hopefully, most of them are self-explanatory enough for now.
 
+## Character Definitions
+"Characters" are just a combination of names and expressions, where expressions are the different portraits that can represent that character on the screen. You define characters in the same files that you define scenes. For example, the demo characters are defined like this:
+```
+export const characters = {
+    Testbot: {
+        name: `Test Bot`,
+        expressions: {
+            default: `testbot\\happy.jpg`,
+            happy: `testbot\\happy.jpg`,
+            angry: `testbot\\angry.jpg`,
+        },
+    },
+    Testbot2: {
+        name: `Test Bot 2`,
+        expressions: {
+            default: `testbot\\angry.jpg`,
+        },
+    },
+}
+```
+Just export them with the name `characters`, and be sure the image paths are in the `public/img/character` folder.
+
 ## Script Functions
 Below is a list of the different functions your script may call.
  * Note that these functions, unless otherwise specified, are `async`. That just means that you can specify whether you want your script to wait for them to finish before continuing by putting `await` in front of them. See [the demo script](https://github.com/akaece/web-vn/blob/main/src/content/Demo.js) for some examples of how you can control the timing of different events to happen one-by-one or all at once.
