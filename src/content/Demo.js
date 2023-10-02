@@ -65,7 +65,7 @@ export const scenes = {
         await g.showText(`You can also move them with a transition.`)
         await g.adjustCharacter(`Testbot`, {position: {right: 0}, transition: `slide`, speed: .1})
         await g.showText(`That can make room for other characters.`)
-        await g.showCharacter(`Testbot2`, {direction: 'up', level: -1, speed: .1, transition: `slide`, position: {left: 2, bottom: 0}})
+        await g.showCharacter(`Testbot2`, {level: -1, speed: .1, transition: `slide`, position: {left: 2, bottom: 0}})
 
         await g.showText(`Portraits can grow and shrink, and even move at the same time.`)
         await g.adjustCharacter(`Testbot2`, {scale: 2, speed: 1, delay: 1})

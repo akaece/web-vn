@@ -410,7 +410,6 @@ GameManager.loadScenes().then(() => {
         scale(portraitNode, e.detail.options.scale)
       )
     }
-    console.log(animArgs)
     const combined = combineAnimArgs(animArgs)
     playAnim(
       portraitNode,
