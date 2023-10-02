@@ -16,6 +16,7 @@ A JS toolkit for developing VNs that are playable in the browser.
     * You can keep your scenes in as many sub-directories and files as you like to keep your scenes organized.
  * Any images and sounds your project needs can go in the appropriate sub-folders of `public/img` and `public/audio`.
  * Check out the documentation below for an explanation of the different functions you can call in your scripts.
+ * *Change `startScene` in `src/configs.js` to specify the first scene of your own script.*
 
 ### Configurations
  * You can customize the look and feel of the UI by updating `src/configs.js` and adding files to `public/img/ui`.
