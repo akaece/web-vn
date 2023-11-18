@@ -135,6 +135,18 @@ const playAnim = (panel, transitionPanel, actions, transitionActions, speed, don
       GameManager.dispatchEvent(doneEvent)
     }
   }
+  else {
+    if (onFinish) {
+      if (typeof onFinish == 'function') {
+        onFinish()
+      } else if (onFinish.length > 0) {
+        for (const m of onFinish) {
+          m()
+        }
+      }
+    }
+    GameManager.dispatchEvent(doneEvent)
+  }
 }
 
 // Replace one image with another using a slide transition
@@ -457,6 +469,81 @@ GameManager.loadScenes().then(() => {
     )
   })
 
+  GameManager.addEventListener('removeAll', (e) => {
+    let transitions = e.detail.options?.transition
+    if (!transitions) {
+      transitions = []
+    }
+    if (typeof transitions == 'string') {
+      transitions = [transitions]
+    }
+
+    for (const portraitNode of PortraitPanel.childNodes) {{
+      const animArgs = []
+      for (const transition of transitions) {
+        switch (transition) {
+          case 'slide':
+            animArgs.push(
+              slideOut(portraitNode, e.detail.options?.direction)
+            )
+            break
+          case 'fade':
+            animArgs.push(
+              fadeOut(portraitNode)
+            )
+            break
+        }
+      }
+      const combined = combineAnimArgs(animArgs)
+      combined.onFinishList.push(() => portraitNode.remove())
+      playAnim(
+        portraitNode,
+        null,
+        combined.actions,
+        combined.transitionActions,
+        e.detail.options?.speed,
+        new CustomEvent('removeAllDone'),
+        combined.onFinishList,
+      )
+    }}
+  })
+
+  GameManager.addEventListener('removeClickable', (e) => {
+    let transitions = e.detail.options?.transition
+    if (typeof transitions == 'string') {
+      transitions = [transitions]
+    }
+
+    const portraitNode = document.getElementById(e.detail.targetScene)
+    portraitNode.onclick = (e) => {}
+    const animArgs = []
+    for (const transition of transitions) {
+      switch (transition) {
+        case 'slide':
+          animArgs.push(
+            slideOut(portraitNode, e.detail.options?.direction)
+          )
+          break
+        case 'fade':
+          animArgs.push(
+            fadeOut(portraitNode)
+          )
+          break
+      }
+    }
+    const combined = combineAnimArgs(animArgs)
+    combined.onFinishList.push(() => portraitNode.remove())
+    playAnim(
+      portraitNode,
+      null,
+      combined.actions,
+      combined.transitionActions,
+      e.detail.options?.speed,
+      new CustomEvent('removeClickableDone'),
+      combined.onFinishList,
+    )
+  })
+
   GameManager.addEventListener('updateFocus', (e) => {
     const focusing = Object.keys(e.detail.focusedOn).length > 0
     let focusScale
@@ -553,6 +640,70 @@ GameManager.loadScenes().then(() => {
     )
   })
 
+  GameManager.addEventListener('showClickable', (e) => {
+    let transitions = e.detail.options?.transition
+    if (typeof transitions == 'string') {
+      transitions = [transitions]
+    }
+
+    const targetScene = e.detail.targetScene
+
+    const portraitNode = document.createElement('img')
+    portraitNode.id = `${targetScene}-clickable`
+    portraitNode.style = `max-height: 95%; position: absolute;`
+    if (e.detail.options?.level) {
+      portraitNode.style['z-index'] = e.detail.options?.level
+    }
+    for (const dir in e.detail.options?.position) {
+      const unit = dir in ['top', 'bottom'] ? 'dvh' : 'dvw'
+      const val = `${e.detail.options?.position[dir]}${unit}`
+      portraitNode.style[dir] = val
+    }
+    if (e.detail.options?.width) {
+      portraitNode.style[width] = `${e.detail.options?.width}dvw`
+    }
+    if (e.detail.options?.height) {
+      portraitNode.style[height] = `${e.detail.options?.height}dvh`
+    }
+    if (e.detail.imagePath) {
+      portraitNode.src = `img\\clickable\\${e.detail.imagePath}`
+    }
+    portraitNode.onclick = (e) => {
+      GameManager.play(targetScene)
+    }
+    PortraitPanel.appendChild(portraitNode)
+
+    if (!transitions) {
+      return
+    }
+
+    const animArgs = []
+    for (const transition of transitions) {
+      switch (transition) {
+        case 'slide':
+          animArgs.push(
+            slideIn(portraitNode, e.detail.options?.direction)
+          )
+          break
+        case 'fade':
+          animArgs.push(
+            fadeIn(portraitNode)
+          )
+          break
+      }
+    }
+    const combined = combineAnimArgs(animArgs)
+    playAnim(
+      portraitNode,
+      null,
+      combined.actions,
+      combined.transitionActions,
+      e.detail.options?.speed,
+      new CustomEvent('showClickableDone'),
+      combined.onFinishList,
+    )
+  })
+
   GameManager.addEventListener('setExpression', (e) => {
     const panel = document.getElementById(e.detail.characterName)
     const newImgSrc = `img\\character\\${e.detail.expression}`
@@ -604,7 +755,6 @@ GameManager.loadScenes().then(() => {
       audio.loop = true
     }
     audio.addEventListener('ended', () => {
-      console.log('asdfasdfasd')
       GameManager.dispatchEvent(new CustomEvent('playSoundDone'))
     })
     audio.play()

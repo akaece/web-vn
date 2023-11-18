@@ -169,6 +169,42 @@ class GameManager extends EventTarget {
         }
     }
 
+    async showClickable(targetScene, imagePath=null, options = {}) {
+        await this.sendEvent(new CustomEvent('showClickable', {
+            detail: {
+                targetScene,
+                imagePath,
+                options,
+            }
+        }))
+        if (options.transition) {
+            await getPromiseFromEvent(this, 'showClickableDone')
+        }
+    }
+
+    async removeClickable(targetScene, options = {}) {
+        await this.sendEvent(new CustomEvent('removeClickable', {
+            detail: {
+                targetScene,
+                options,
+            }
+        }))
+        if (options.transition) {
+            await getPromiseFromEvent(this, 'removeClickableDone')
+        }
+    }
+
+    async removeAll(options = {}) {
+        await this.sendEvent(new CustomEvent('removeAll', {
+            detail: {
+                options,
+            }
+        }))
+        if (options.transition) {
+            await getPromiseFromEvent(this, 'removeAllDone')
+        }
+    }
+
     async showCharacter(characterName, options = {}) {
         const character = this.characters[characterName]
         await this.sendEvent(new CustomEvent('showCharacter', {
